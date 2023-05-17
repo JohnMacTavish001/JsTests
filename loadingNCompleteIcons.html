@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <title>Document</title>
+    <style>
+        .icon-loading::before {
+            color: white;
+            font-size: 2rem;
+            background-color: blue;
+            border-radius: 50% 50%;
+            animation: spin 1s infinite;
+
+        }
+
+        .icon-success {
+            color: green;
+            font-size: 2rem;
+        }
+
+        .rotating {
+            animation: rotation 2s infinite linear;
+        }
+
+        @keyframes rotation {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .icon-container {
+            width: 32px;
+            height: 32px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="app" class="m-4">
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Loading test</h5>
+                <p class="card-text">
+                <div class="icon-container" v-show="!loading">
+                    <i class="bi bi-check-circle-fill icon-success rotating"></i>
+                </div>
+                <div class="icon-container rotating" v-show="loading">
+                    <i class="bi bi-arrow-repeat icon-loading"></i>
+                </div>
+                </p>
+                <p>
+                    loading: {{ loading.toString() }}
+                </p>
+                <button type="button" class="btn btn-primary" @click="startLoading" :disabled="loading">Load</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var app = Vue.createApp({
+        data() {
+            return {
+                loading: false
+            }
+        },
+        methods: {
+            startLoading () {
+                this.loading = true;
+                setTimeout(() => {
+                    this.loading = false;
+                }, 2000);
+            }
+        }
+    })
+
+    app.mount("#app")
+</script>
+
+</html>
