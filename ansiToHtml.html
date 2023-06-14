@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        #original,
+        #target {
+            height: 300px;
+            width: 300px;
+            border: 1px solid black;
+            overflow: scroll;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/ansi_up@5.2.1/ansi_up.min.js"></script>
+    <script type="module">
+        import chalk from 'https://cdn.jsdelivr.net/npm/chalk@5.2.0/+esm';
+        import Convert from 'https://cdn.jsdelivr.net/npm/ansi-to-html@0.7.2/+esm'
+        const originalString = `Removing source code
+  Restoring application artifact
+[34m[0m
+[34m[1mPaketo Buildpack for Executable JAR[0m[34m 6.5.0[0m`;
+        window.onload = function () {
+            document.getElementById("original").innerHTML = originalString;
+        }
+
+        document.getElementById('button').addEventListener('click', () => {
+            console.log(chalk)
+            const target = document.getElementById('target');
+            if (target) {
+                // console.log(Object.keys(ansiToHtml));
+                const convert = new Convert({
+                    fg: '#FFF', // default value
+                    bg: '#000', // default value
+                    newline: true, // default value is false
+                    escapeXML: false, // default value
+                    stream: false // default value
+                });
+                const converted = convert.toHtml(originalString);
+                target.innerHTML = converted;
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div>refer to https://www.npmjs.com/package/ansi-to-html</div>
+    <div id="original"></div>
+    <button id="button">convert</button>
+    <div id="target"></div>
+</body>
+
+</html>
