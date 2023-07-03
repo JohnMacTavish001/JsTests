@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.aspnetcdn.com/ajax/knockout/knockout-3.1.0.js" type="text/javascript"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <p>
+        first string:
+        <label>
+            <input data-bind="value:firstString" />
+        </label>
+    </p>
+    <p>
+        second string:
+        <label>
+            <input data-bind="value:secondString" />
+        </label>
+    </p>
+    <br>
+    <p data-bind="text:firstString"></p>
+    <p data-bind="text:secondString"></p>
+    <button data-bind="click: onBtnClick">Click Times: <span data-bind="text:btnClickCount"></span></button>
+    <div data-bind="foreach: {data: sampleArray, as: 'sampleArrayItem'}">
+        <p>
+            <span data-bind="text: sampleArrayItem"></span>
+            <button
+                data-bind="click: $parent.removeForArray, disable: $parent.sampleArray().length === 1">remove</button>
+        </p>
+    </div>
+    <button data-bind="click: addForArray">Add for array</button>
+    <div data-bind="with: sampleObj">
+        <p>With: </p>
+        <p data-bind="text: paramA"></p>
+        <p data-bind="text: paramB"></p>
+    </div>
+    <div data-bind="with: sampleObsObj">
+        <p>With: </p>
+        <p data-bind="text: paramA"></p>
+        <p data-bind="text: paramB"></p>
+    </div>
+    <div data-bind="using: sampleObj">
+        <p>Using: </p>
+        <p data-bind="text: sampleObj.paramA"></p>
+        <p data-bind="text: sampleObj.paramB"></p>
+    </div>
+    <div data-bind="using: sampleObsObj">
+        <p>Using: </p>
+        <p data-bind="text: sampleObsObj.paramA"></p>
+        <p data-bind="text: sampleObsObj.paramB"></p>
+    </div>
+    <div data-bind="foreach: {data: objectArray, as: 'objectArrayItem'}">
+        <p>
+            <span data-bind="text: objectArrayItem.firstName"></span>
+        </p>
+    </div>
+    <script>
+        function AppViewModel() {
+            const _this = this;
+            this.firstString = ko.observable('first string');
+            this.secondString = ko.observable('second string');
+            this.btnClickCount = ko.observable(0);
+            this.onBtnClick = function () {
+                this.btnClickCount(this.btnClickCount() + 1);
+            };
+            this.sampleArray = ko.observableArray([0, 1, 2, 3]);
+            this.addForArray = function () {
+                this.sampleArray.push(this.sampleArray()[this.sampleArray().length - 1] + 1);
+            };
+            this.removeForArray = function (item) {
+                _this.sampleArray.remove(item);
+            };
+            this.sampleObj = {
+                paramA: 'value A',
+                paramB: 'value B',
+            };
+            this.sampleObsObj = ko.observable({
+                paramA: 'value A',
+                paramB: 'value B',
+            })
+            this.objectArray = ko.observable([
+                {
+                    firstName: 'first1',
+                    lastName: 'last1',
+                    id: '001',
+                    labels: ['label1', 'label2'],
+                },
+                {
+                    firstName: 'first2',
+                    lastName: 'last2',
+                    id: '002',
+                    labels: ['label3', 'label4']
+                }
+            ]);
+        }
+
+        ko.applyBindings(new AppViewModel());
+    </script>
+</body>
+
+</html>

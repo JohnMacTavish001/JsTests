@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <button onclick="playAudio(0)">Play Audio 1</button>
+    <button onclick="playAudio(1)">Play Audio 2</button>
+    <button onclick="stop()">Stop</button>
+    <!-- Add more buttons as needed -->
+
+    <audio id="audioPlayer"></audio>
+
+    <script>
+        // Replace with your actual API URLs
+        var audioFiles = [
+            'http://localhost:8080/audio/ff-16b-1c-44100hz.mp3',
+            'http://localhost:8080/audio/gs-16b-2c-44100hz.mp3',
+            // Add more URLs as needed
+        ];
+
+        function playAudio(index) {
+            fetch(audioFiles[index])
+                .then(response => response.blob())
+                .then(blob => {
+                    var url = URL.createObjectURL(blob);
+                    var audioPlayer = document.getElementById('audioPlayer');
+                    audioPlayer.src = url;
+                    audioPlayer.play();
+                })
+                .catch(error => console.error(error));
+        }
+
+        function stop () {
+            const audioPlayer = document.getElementById('audioPlayer');
+            if (audioPlayer) {
+                audioPlayer.src = '';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
