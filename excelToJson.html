@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XLSX Reader</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prettier@2.8.8/standalone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prettier@2.8.8/parser-babel.js"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        textarea {
+            width: 100%;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+<h1>XLSX File Reader</h1>
+<input type="file" id="fileInput" />
+<br /><br />
+<table id="dataTable"></table>
+<textarea name="json-text-area" id="json-text-area" rows="30"></textarea>
+<script>
+    document.getElementById('fileInput').addEventListener('change', handleFile, false);
+
+    function handleFile(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            console.log(jsonData)
+
+            displayData(jsonData);
+            displayJson(jsonData);
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+
+    function displayData(data) {
+        const table = document.getElementById('dataTable');
+        table.innerHTML = ""; // Clear previous data
+
+        data.forEach((row) => {
+            const tr = document.createElement('tr');
+            row.forEach((cell) => {
+                const td = document.createElement('td');
+                td.textContent = cell;
+                tr.appendChild(td);
+            });
+            table.appendChild(tr);
+        });
+    }
+
+    function tableColumnsToJson(data) {
+        if (data?.length === 0) {
+            console.error('No data found.');
+            return [];
+        }
+
+        const headers = data[0];
+        if (headers?.length === 0) {
+            console.error('No headers found.');
+            return [];
+        }
+
+        const result = [];
+        for (let i = 0; i < data.length; i++) {
+            const row = data[i];
+            const rowData = {};
+            for (let j = 0; j < headers.length; j++) {
+                rowData[headers[j]] = j < row.length ? row[[j]] : null;
+            }
+            result.push(rowData);
+        }
+
+        return result;
+    }
+
+    function displayJson(data) {
+        const jsonData = JSON.stringify(tableColumnsToJson(data));
+        document.getElementById('json-text-area').textContent = formatCode(jsonData);
+    }
+
+    function formatCode(code) {
+        try {
+            return prettier.format(code, {
+                parser: "babel",
+                plugins: [prettierPlugins.babel],
+                singleQuote: true,
+                trailingComma: 'all',
+            });
+
+        } catch (error) {
+            console.error(error);
+            return "Error formatting code: " + error.message;
+        }
+    }
+</script>
+</body>
+</html>
